@@ -1,0 +1,45 @@
+data_input = data[['Comments', 'Followers', 'Genre', 'Likes', 
+       'Popularity', 'Views', 'Year']]
+       
+       
+       
+       
+       
+https://github.com/nursnaaz/25DaysInMachineLearning/blob/master/20%20-%20Day%20-20%20-%20Logistic%20Regression/Marketing%20Subscription%20Prediction.ipynb
+edayadullam@gmail.com
+
+- spyder is not user friednly 
+- How to apply if else condition using np.where()
+- How to change the datatype of variable from String to int 
+-
+
+
+
+
+model = LinearRegression() 
+model_fit(model,X_train_train,X_train_test,Y_train_train,Y_train_test,X_Test)
+Model: LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
+Train RMSE :  710344.1912112433
+Test RMSE :  767957.5616918631
+number of features used:  6
+
+model = Lasso()
+model_fit(model,X_train_train,X_train_test,Y_train_train,Y_train_test,X_Test)
+Model: Lasso(alpha=1.0, copy_X=True, fit_intercept=True, max_iter=1000,
+      normalize=False, positive=False, precompute=False, random_state=None,
+      selection='cyclic', tol=0.0001, warm_start=False)
+Train RMSE :  710344.19121136
+Test RMSE :  767957.5630591039
+number of features used:  6
+
+model = Lasso(alpha=0.1)
+model_fit(model,X_train_train,X_train_test,Y_train_train,Y_train_test,X_Test)
+Model: Lasso(alpha=0.1, copy_X=True, fit_intercept=True, max_iter=1000,
+      normalize=False, positive=False, precompute=False, random_state=None,
+      selection='cyclic', tol=0.0001, warm_start=False)
+Train RMSE :  710344.1912112443
+Test RMSE :  767957.5618284493
+number of features used:  6
+
+mEejwCu
+

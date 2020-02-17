@@ -1,0 +1,5 @@
+Xgboost
+https://www.youtube.com/watch?v=Vly8xGnNiWs&feature=emb_logo
+
+Eigen values & Eigen vectors:
+https://www.youtube.com/watch?v=PFDu9oVAE-g
