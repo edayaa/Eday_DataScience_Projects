@@ -1,0 +1,93 @@
+---
+title: "Machine_Learning_Proj_Coursera"
+author: "Edayadulla M"
+date: "8/24/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Project Objective
+### Main Goal of this project is to understand , analyse and predict the manner in which     people did the exercise using the "Weight Lifting Exercise Dataset". 
+### "classe" variable in the training dataset is the outcome we would like to predict.
+## Below are the list of steps being done. 
+### 1. Loading of Train and test datasets.
+### 2. Quick Exploratory data analysis on the Dataset.
+### 3. Data Clean-up. Assumption taken to disgard the predictor variables which are 
+### having 'NA' values > 70% of the time.
+### 4. Removed User_id and TimeStamp related variables.
+### 5. Split clean dataset into Training & Testing datasets.
+### 6. Using various models to train the "training" dataset.
+### 7. Review the model results to choose most approprite one.
+### 8. Predict the 20 input values provided in the test dataset for quiz
+## Loading of all required libraries to execute this project
+```{r 1. Library Load}
+library(dplyr)
+library(caret)
+library(corrplot)
+library(mltools)
+library(e1071)
+library(ggplot2)
+library(randomForest)
+source("http://www.sthda.com/upload/rquery_cormat.r")
+require("corrplot")
+library(rquery)
+```
+## Loading of Test & train datasets and Pre-processing 
+```{r 2. Data down load and clean-up, echo=FALSE}
+#plot(pressure)
+train_data <- read.csv("C:/Users/IQBALE/R_Projects/pml-training.csv")
+test_data <- read.csv("C:/Users/IQBALE/R_Projects/pml-testing.csv")
+train_data <- train_data %>% mutate_all(na_if,"")
+cols <- data.frame(sapply(train_data, function(x) sum(is.na(x))))
+cols <- cbind(variable = row.names(cols), cols)
+select_cols <- list() 
+j = 1;
+for ( i in 1:dim(cols)[1] )
+   if ( as.integer(cols[i,2]) > (dim(train_data)[1] * 0.7) ){
+      select_cols[j] <- as.character(cols[i,1])
+      j = j+1
+   }
+train_clean1 <- train_data[,!(names(train_data) %in% select_cols)]
+test_clean1 <- test_data[,!(names(test_data) %in% select_cols)]
+remove_col <- c("X","new_window","user_name","raw_timestamp_part_1", "raw_timestamp_part_2","cvtd_timestamp","problem_id")
+
+train_clean  <- train_clean1[,!(names(train_clean1) %in% remove_col)]
+test_clean   <- test_clean1[,!(names(test_clean1) %in% remove_col)]
+```
+##  EXploratory Data Analysis
+``` {r 2A.Co-relation b/w predictor variables , echo=FALSE }
+rquery.cormat(train_clean[,1:20])
+```           
+##  Training and Testing data split
+``` {r 3.Train and Test data split , echo=FALSE }
+inTrain = createDataPartition(train_clean$classe, p = 0.8)[[1]]
+training = train_clean[ inTrain,]
+testing = train_clean[-inTrain,]
+set.seed( 62433)
+```
+## Random Forest Model 
+```{r 4. Creating Random Forest model, echo=FALSE}
+set.seed(711)
+train.rf <- randomForest(classe ~ ., data=training, importance=TRUE,ntree = 50 , mtry = 10 , proximity=TRUE)
+print(train.rf)
+predtrainrf <- predict(train.rf,newdata = testing)
+confusionMatrix(testing$classe,predtrainrf)
+```
+## SVM Model
+```{r 5. SVM Model , echo=FALSE}
+modelsvm <- svm(classe ~ . , data = training)
+predsvm <- predict(modelsvm,testing)
+confusionMatrix(testing$classe,predsvm)
+testpred <- predict(modelsvm,test_clean)
+```
+## PLOTTING of Predicted vs Actual Outcome
+```{r 6. Plotting predicted vs actual , echo=FALSE}
+qplot(classe,predsvm,colour=classe,data=testing)
+```
+## COnclusion 
+### Based on the model results,Random Forest would be most appropriate model for this 
+### dataset.
